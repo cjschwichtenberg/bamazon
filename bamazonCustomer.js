@@ -1,6 +1,6 @@
-// const dotenv = require("dotenv").config();
-// console.log(dotenv);
-// const keys = require('./keys.js');
+const dotenv = require("dotenv").config();
+console.log(dotenv);
+const keys = require('./keys.js');
 
 
 const mysql = require("mysql");
