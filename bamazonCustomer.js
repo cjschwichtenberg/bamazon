@@ -11,7 +11,9 @@ const cTable = require('console.table');
 
 var productArray = [];
 
-var totalPrice = 0;
+let totalPrice = 0;
+
+
 
 
 
@@ -19,7 +21,7 @@ const connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
     user: "root",
-    password: "XXXXXXXXX",
+    password: keys.mysql.password,
     database: "bamazonDB"
 });
 
@@ -29,7 +31,7 @@ connection.connect(function (err) {
     productTable();
 });
 
-function productTable() {
+function productTable(initial = true) {
     
     console.log("\n--------------")
     console.log("\nYou've reached BAMAZON! View our product offerings at this time below...")
@@ -40,13 +42,14 @@ function productTable() {
         for (i = 0; i < res.length; i++) {
             productArray.push(res[i]);
         }
-        console.table(res);
+        if (initial) console.table(res);
         // console.log(productArray);
         purchaseProduct();
     });
 }
 
 function purchaseProduct(productArrayID) {
+
     
     var productArrayID = [];
     
@@ -144,7 +147,7 @@ function purchaseProduct(productArrayID) {
 
             if (shoppingCartQuantity > stockQuantity) {
                 console.log("Opps! Unfortunately we are running low on your selected items stock. Please update your shopping cart quantity.");
-                productTable();
+                productTable(false);
             } else if (shoppingCartQuantity <= stockQuantity) {
                 var newStockQuantity = stockQuantity - shoppingCartQuantity;
                 console.log(newStockQuantity);
@@ -167,7 +170,7 @@ function purchaseProduct(productArrayID) {
                 updateQuantity();
                 var price = soldProductOBJ.Price;
                 console.log('Price: $ ' + price + " each");
-                var totalPrice = shoppingCartQuantity * soldProductOBJ.Price;
+                totalPrice += shoppingCartQuantity * soldProductOBJ.Price;
                 console.log("Your shopping cart total is: $ " + totalPrice)
                 inquirer.prompt([
                     {
@@ -189,7 +192,7 @@ function purchaseProduct(productArrayID) {
                                 productArray.push(res[i]);
                             }
                             console.table(res);
-                            productTable();
+                            productTable(false);
                         });
                     }else if (answer.continueShopping === "NO") {
                         console.log("Thank you for your purchase. You total today is: $ " + totalPrice);
@@ -200,4 +203,5 @@ function purchaseProduct(productArrayID) {
         });
     })
 }
+
 
