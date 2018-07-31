@@ -1,6 +1,6 @@
-const dotenv = require("dotenv").config();
-console.log(dotenv);
-const keys = require('./keys.js');
+// const dotenv = require("dotenv").config();
+// console.log(dotenv);
+// const keys = require('./keys.js');
 
 
 const mysql = require("mysql");
@@ -11,13 +11,15 @@ const cTable = require('console.table');
 
 var productArray = [];
 
-var stockQuantity = 0;
+var totalPrice = 0;
+
+
 
 const connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
     user: "root",
-    password: "XXXXXXXXX",
+    password: "passphrase",
     database: "bamazonDB"
 });
 
@@ -117,7 +119,7 @@ function purchaseProduct(productArrayID) {
             // var stockQuantity = soldProductOBJ.["StockQuantity"]
 
         // 5th attempt:
-        // Shows MySQL Database Table Data- as an Array of Objects... i.e. rows
+        // Shows MySQL Database Table Data (Array of Objects)... i.e. rows
         // connection.query("SELECT * FROM products", function (err, result, fields) {
         //     // if any error while executing above query, throw error
         //     if (err) throw err;
@@ -130,7 +132,7 @@ function purchaseProduct(productArrayID) {
         //     });
 
         // 6th attempt:
-        // Shows MySQL Table Data... i.e. fields
+        // Shows MySQL Database Table Data (Stats)... i.e. fields
         // connection.query("SELECT * FROM products", function (err, result, fields) {
         //     if (err) throw err;
         //     Object.keys(fields).forEach(function(key) {
@@ -188,14 +190,14 @@ function purchaseProduct(productArrayID) {
                             }
                             console.table(res);
                             productTable();
-                            return;
                         });
-                        
                     }else if (answer.continueShopping === "NO") {
                         console.log("Thank you for your purchase. You total today is: $ " + totalPrice);
+                        connection.end();
                    }
                 })
             }
         });
     })
 }
+
