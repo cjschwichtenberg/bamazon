@@ -128,7 +128,7 @@ function purchaseProduct(productArrayID) {
         //     });
 
         // 6th attempt:
-        // Shows MySQL Table Data... i.e. fields
+        // Shows MySQL Table Data...Table Stats i.e. fields
         // connection.query("SELECT * FROM products", function (err, result, fields) {
         //     if (err) throw err;
         //     Object.keys(fields).forEach(function(key) {
