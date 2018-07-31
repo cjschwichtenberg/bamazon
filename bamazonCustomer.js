@@ -11,14 +11,13 @@ const cTable = require('console.table');
 
 var productArray = [];
 
-var stockQuantity;
+var stockQuantity = 0;
 
 const connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
     user: "root",
-    // ENTER PERSONAL MYSQL PASSPWORD BELOW
-    password: keys.mysql.password, 
+    password: "passphrase",
     database: "bamazonDB"
 });
 
@@ -82,10 +81,10 @@ function purchaseProduct(productArrayID) {
     ])
     .then(answers => {
         var shoppingCartID = answers.id;
-        console.log(shoppingCartID);
+        // console.log(shoppingCartID);
 
         var shoppingCartQuantity = answers.quantity;
-        console.log(shoppingCartQuantity);
+        // console.log(shoppingCartQuantity);
 
         var queryStr = "SELECT * FROM products WHERE ID = " + shoppingCartID;
         
@@ -106,15 +105,14 @@ function purchaseProduct(productArrayID) {
             // console.log("Stringify: " + soldProductOBJ);
 
             soldProductOBJ = JSON.parse(JSON.stringify(res[0]));
-            console.log("Parsed: " + soldProductOBJ);
             var stockQuantity = soldProductOBJ.StockQuantity;
-            
+            console.log("Stock Quantity: " + stockQuantity);
+        
             // 3rd attempt;
             // var stockQuantity = soldProductOBJ[0].StockQuantity;
             
             // 4th attempt
             // var stockQuantity = soldProductOBJ.["StockQuantity"]
-            console.log("Stock Quantity: " + stockQuantity);
 
         // 5th attempt:
         // Shows MySQL Database Table Data- as an Array of Objects... i.e. rows
@@ -144,8 +142,27 @@ function purchaseProduct(productArrayID) {
                 console.log("Opps! Unfortunately we are running low on your selected items stock. Please update your shopping cart quantity.");
                 purchaseProduct();
             } else if (shoppingCartQuantity <= stockQuantity) {
+                var newStockQuantity = stockQuantity - shoppingCartQuantity;
+                console.log(newStockQuantity);
+                function updateQuantity() {
+                    console.log("Updating quantity...\n");
+                    connection.query("UPDATE products SET ? WHERE ?",
+                        [
+                            {
+                                StockQuantity: newStockQuantity
+                            },
+                            {
+                                ID: shoppingCartID
+                            }   
+                        ],
+                        function(err, res) {
+                            console.log(res.affectedRows + " products updated!\n");
+                        }
+                    );
+                } 
+                updateQuantity();
                 var price = soldProductOBJ.Price;
-                console.log('Price: $ ' + price);
+                console.log('Price: $ ' + price + " each");
                 var totalPrice = shoppingCartQuantity * soldProductOBJ.Price;
                 console.log("Thank you for your purchase! Your total is: $ " + totalPrice)
                 inquirer.prompt([
@@ -153,14 +170,15 @@ function purchaseProduct(productArrayID) {
                         type: "list",
                         name: "continueShopping",
                         message: "Would you like to add another item to your shopping cart?",
-                        choices: ["YES", "NO"]
+                        choices: ["YES", "NO"],
+                        default: false
                     }
                 ])
                 .then(answer => {
                     if (answer === "YES") {
                         productTable();
                     }else if (answer === "NO") {
-                        console.log("Thank you for your purchase. You total today is: $ " + totalPrice);
+                        console.log("Thank you for your purchase. You total today is: $ " + stockQuantity);
                    }
                 })
             }
