@@ -10,7 +10,7 @@ CREATE TABLE products(
 		ProductName VARCHAR(35) NOT NULL,
 		DepartmentName VARCHAR(35) NOT NULL,
         Color VARCHAR(35) NOT NULL,
-		Price FLOAT(8,2)  NOT NULL DEFAULT 0.00,
+		Price DECIMAL(8,2)  NOT NULL DEFAULT 0.00,
 		StockQuantity INTEGER(35) NOT NULL DEFAULT 0,
 		PRIMARY KEY (id)
 );
@@ -45,7 +45,37 @@ VALUES (0, "booties", "shoes", "blk-leather", 259.99, 10);
 INSERT INTO products (ID, ProductName, DepartmentName, Color, Price, StockQuantity)
 VALUES (0, "boots-calf", "shoes", "brown-leather", 349.99, 5);
 
+INSERT INTO products (ID, ProductName, DepartmentName, Color, Price, StockQuantity)
+VALUES (0, "boots-knee", "shoes", "red-leather", 349.99, 5);
+
 SELECT * FROM products;
+
+
+
+    // inquirer.prompt([
+    //     {
+    //     type: "input",
+    //     name: "shoppingCart",
+    //     message: "What productID would you like to add to your shopping cart?"
+    //     }
+    // ]).then(function(answer) {
+    //     connection.query("SELECT * from products", function (err, res) {
+    //         var productID = [];
+    //         if (err) throw err;
+    //         for (i = 0; i < res.length; i++) {
+    //             productID.push(res[i].ID);
+    //         }
+    //         console.log(productId);
+    //     })
+        // if(productID.indexof() === -1) {
+        //     console.log("Please enter a valid product ID!")
+        //     break;
+        //     shoppingCartID();
+        // }else if (!isNaN(answer.productID)) {
+        //     console.log("INVALID ENTRY. Please enter the items ID number.")
+        // }
+//     });
+// 
 
 
 

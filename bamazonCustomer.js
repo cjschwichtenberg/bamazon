@@ -17,13 +17,13 @@ const connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
     user: "root",
-    password: "XXXXXXXXX",
+    password: "passphrase",
     database: "bamazonDB"
 });
 
 connection.connect(function (err) {
     if (err) throw err;
-    console.log("connected as id " + connection.threadId + "\n");
+    // console.log("connected as id " + connection.threadId + "\n");
     productTable();
 });
 
@@ -53,14 +53,16 @@ function purchaseProduct(productArrayID) {
         for (i = 0; i < res.length; i++) {
             productArrayID.push(res[i].ID);
         }
+        console.log("\n--------------")
         console.log(productArrayID);
+        console.log("---------------\n")
     });
     
     inquirer.prompt([
         {
             type: "input",
             name: "id",
-            message: "Please enter the product ID number you would like to add to your shopping cart?",
+            message: "Please enter the product ID number from the list below that you would like to add to your shopping cart...",
             choices: productArrayID,
             validate: function(value) {
                 var valid = !isNaN(parseFloat(value));
@@ -140,7 +142,7 @@ function purchaseProduct(productArrayID) {
 
             if (shoppingCartQuantity > stockQuantity) {
                 console.log("Opps! Unfortunately we are running low on your selected items stock. Please update your shopping cart quantity.");
-                purchaseProduct();
+                productTable();
             } else if (shoppingCartQuantity <= stockQuantity) {
                 var newStockQuantity = stockQuantity - shoppingCartQuantity;
                 console.log(newStockQuantity);
@@ -164,21 +166,33 @@ function purchaseProduct(productArrayID) {
                 var price = soldProductOBJ.Price;
                 console.log('Price: $ ' + price + " each");
                 var totalPrice = shoppingCartQuantity * soldProductOBJ.Price;
-                console.log("Thank you for your purchase! Your total is: $ " + totalPrice)
+                console.log("Your shopping cart total is: $ " + totalPrice)
                 inquirer.prompt([
                     {
                         type: "list",
                         name: "continueShopping",
                         message: "Would you like to add another item to your shopping cart?",
                         choices: ["YES", "NO"],
-                        default: false
+                        filter: function(val) {
+                            return val.toUpperCase();
+                            
+                        },
                     }
                 ])
                 .then(answer => {
-                    if (answer === "YES") {
-                        productTable();
-                    }else if (answer === "NO") {
-                        console.log("Thank you for your purchase. You total today is: $ " + stockQuantity);
+                    if (answer.continueShopping === "YES") {
+                        connection.query("SELECT * FROM products", function (err, res) {
+                            if (err) throw err;
+                            for (i = 0; i < res.length; i++) {
+                                productArray.push(res[i]);
+                            }
+                            console.table(res);
+                            productTable();
+                            return;
+                        });
+                        
+                    }else if (answer.continueShopping === "NO") {
+                        console.log("Thank you for your purchase. You total today is: $ " + totalPrice);
                    }
                 })
             }
