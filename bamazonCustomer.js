@@ -18,7 +18,7 @@ const connection = mysql.createConnection({
     port: 3306,
     user: "root",
     // ENTER PERSONAL MYSQL PASSPWORD BELOW
-    password: "XXXXXXXXX", 
+    password: keys.mysql.password, 
     database: "bamazonDB"
 });
 
