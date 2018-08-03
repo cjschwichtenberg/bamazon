@@ -1,7 +1,7 @@
 const dotenv = require("dotenv").config();
 console.log(dotenv);
-const keys = require('./keys.js');
 
+const keys = require('./keys.js');
 
 const mysql = require("mysql");
 
@@ -12,10 +12,6 @@ const cTable = require('console.table');
 var productArray = [];
 
 let totalPrice = 0;
-
-
-
-
 
 const connection = mysql.createConnection({
     host: "localhost",
@@ -30,6 +26,8 @@ connection.connect(function (err) {
     // console.log("connected as id " + connection.threadId + "\n");
     productTable();
 });
+
+
 
 function productTable(initial = true) {
     
@@ -48,9 +46,10 @@ function productTable(initial = true) {
     });
 }
 
+
+
 function purchaseProduct(productArrayID) {
 
-    
     var productArrayID = [];
     
     connection.query("SELECT * FROM products", function (err, res) {
@@ -142,9 +141,7 @@ function purchaseProduct(productArrayID) {
         //         var field = fields[key];
         //         console.log(field)
         //     });
-
-
-
+            
             if (shoppingCartQuantity > stockQuantity) {
                 console.log("Opps! Unfortunately we are running low on your selected items stock. Please update your shopping cart quantity.");
                 productTable(false);
