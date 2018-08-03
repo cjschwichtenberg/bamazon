@@ -49,33 +49,3 @@ INSERT INTO products (ID, ProductName, DepartmentName, Color, Price, StockQuanti
 VALUES (0, "boots-knee", "shoes", "red-leather", 349.99, 5);
 
 SELECT * FROM products;
-
-
-
-    // inquirer.prompt([
-    //     {
-    //     type: "input",
-    //     name: "shoppingCart",
-    //     message: "What productID would you like to add to your shopping cart?"
-    //     }
-    // ]).then(function(answer) {
-    //     connection.query("SELECT * from products", function (err, res) {
-    //         var productID = [];
-    //         if (err) throw err;
-    //         for (i = 0; i < res.length; i++) {
-    //             productID.push(res[i].ID);
-    //         }
-    //         console.log(productId);
-    //     })
-        // if(productID.indexof() === -1) {
-        //     console.log("Please enter a valid product ID!")
-        //     break;
-        //     shoppingCartID();
-        // }else if (!isNaN(answer.productID)) {
-        //     console.log("INVALID ENTRY. Please enter the items ID number.")
-        // }
-//     });
-// 
-
-
-
